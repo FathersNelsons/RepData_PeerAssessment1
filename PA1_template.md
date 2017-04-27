@@ -1,10 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-Author: "Grayson Udstrand"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 ## Loading and preprocessing the data
 ### 1. Loading in the data
@@ -12,7 +6,8 @@ output:
 First, in order to save processing time and unnecessary downloads, check to see
 if the working data frame exists in the environment. If it does, move on.  
  
-```{r}
+
+```r
 if (!exists("activity")) {
         download.file(
                 "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip",
@@ -25,8 +20,16 @@ if (!exists("activity")) {
 Running `str(activity)` on the data reveals we may need to perform some
 processing to make this useful:
 
-```{r}
+
+```r
 str(activity)
+```
+
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
 ```
 
 
@@ -39,7 +42,8 @@ their native form. We will convert that column to dates. Finally, we see that
 used as identifiers to represent a 5 minute interval that repeats every day, we
 should convert this to a factor. We will use the `dplyr` package.
 
-```{r message=FALSE}
+
+```r
 library(dplyr)
 activity <- mutate(activity, 
                    date = as.Date(as.character(date)), 
@@ -47,20 +51,42 @@ activity <- mutate(activity,
 str(activity)
 ```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Date, format: "2012-10-01" "2012-10-01" ...
+##  $ interval: Factor w/ 288 levels "0","5","10","15",..: 1 2 3 4 5 6 7 8 9 10 ...
+```
+
 Our `str` confirms that the data is all ready for us to start working with it!
 
 ## What is mean total number of steps taken per day?
 ### 1. Create a histogram for total steps each day
 
-```{r}
+
+```r
 activity_daily_total <- aggregate(steps ~ date, activity, sum)
 hist(activity_daily_total$steps)
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
 ### 2. Calculate the mean and median total number of steps per day
-```{r}
+
+```r
 mean(activity_daily_total$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(activity_daily_total$steps)
+```
+
+```
+## [1] 10765
 ```
 
 
