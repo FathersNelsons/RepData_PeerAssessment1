@@ -5,7 +5,9 @@ output:
   html_document:
     keep_md: true
 ---
-
+```{r setup,message=FALSE,echo=FALSE}
+knitr::opts_chunk$set(fig.path = "figures/")
+```
 ## Loading and preprocessing the data
 ### 1. Loading in the data
   
@@ -154,7 +156,7 @@ str(activity)
 summary(activity$date_category)
 ```
 ### 2. Make a panel plot to compare the mean steps across all days on interval ID
-```{r, message=FALSE}
+```{r, message=FALSE,warning=FALSE}
 library(ggplot2)
 interval_weekday_mean <- aggregate(steps~interval + date_category, activity, mean)
 p <- ggplot(interval_weekday_mean, 

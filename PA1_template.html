@@ -276,9 +276,8 @@ str(activity)</code></pre>
 </div>
 <div id="make-a-panel-plot-to-compare-the-mean-steps-across-all-days-on-interval-id" class="section level3">
 <h3>2. Make a panel plot to compare the mean steps across all days on interval ID</h3>
-<pre class="r"><code>library(ggplot2)</code></pre>
-<pre><code>## Warning: package 'ggplot2' was built under R version 3.3.3</code></pre>
-<pre class="r"><code>interval_weekday_mean &lt;- aggregate(steps~interval + date_category, activity, mean)
+<pre class="r"><code>library(ggplot2)
+interval_weekday_mean &lt;- aggregate(steps~interval + date_category, activity, mean)
 p &lt;- ggplot(interval_weekday_mean, 
        aes(x=interval,
            y=steps,

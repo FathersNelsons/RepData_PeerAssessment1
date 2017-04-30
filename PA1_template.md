@@ -69,7 +69,7 @@ activity_daily_total <- aggregate(steps ~ date, activity, sum)
 hist(activity_daily_total$steps)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](figures/unnamed-chunk-4-1.png)<!-- -->
 
 ### 2. Calculate the mean and median total number of steps per day
 
@@ -109,7 +109,7 @@ with(interval_mean,
           main = "Mean Steps by Interval Across All Days"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](figures/unnamed-chunk-6-1.png)<!-- -->
 
 ### 2. Which 5-minute interval on average contains the maximum number of steps?
 
@@ -170,7 +170,7 @@ hist(activity_daily_total$steps, main = "Before Impute")
 hist(new_activity_daily_total$steps, main = "After Impute")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](figures/unnamed-chunk-10-1.png)<!-- -->
 
 #### New mean and median comparison
 
@@ -233,13 +233,6 @@ summary(activity$date_category)
 
 ```r
 library(ggplot2)
-```
-
-```
-## Warning: package 'ggplot2' was built under R version 3.3.3
-```
-
-```r
 interval_weekday_mean <- aggregate(steps~interval + date_category, activity, mean)
 p <- ggplot(interval_weekday_mean, 
        aes(x=interval,
@@ -252,4 +245,4 @@ p <- p + geom_line()
 p + facet_wrap(~date_category, ncol = 1)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](figures/unnamed-chunk-13-1.png)<!-- -->
