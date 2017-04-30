@@ -65,9 +65,11 @@ median(activity_daily_total$steps)
 
 
 ## What is the average daily activity pattern?
-### 1. Make a time-series plot of the average number of steps taken per 5 minute interval across all days  
+### 1. Make a time-series plot of the average number of steps taken per interval  
   
-We create a new data frame which takes the mean number of steps by interval across the whole dataset. It is then easy to use the base plotting package to put together a relatively informative plot as you can see below.  
+We create a new data frame which takes the mean number of steps by interval 
+across the whole dataset. It is then easy to use the base plotting package to 
+put together a relatively informative plot as you can see below.  
 
 ```{r, message=FALSE}
 interval_mean <- aggregate(steps ~ interval, activity, mean)
@@ -80,14 +82,26 @@ with(interval_mean,
           main = "Mean Steps by Interval Across All Days"))
 ```
 
-### 2. Which 5-minute interval on average across all contains the maximum number of steps?
+### 2. Which 5-minute interval on average contains the maximum number of steps?
 
 ```{r}
 interval_mean[which.max(interval_mean$steps),]
 ```
 
 ## Imputing missing values
+### 1. Calculate and report the total number of rows with missing values in the dataset
+```{r}
+incomplete_sum          <- sum(!complete.cases(activity))
+incomplete_percent      <- mean(!complete.cases(activity))
+```
 
-
+### 2. A strategy for filling in missing values
+It seems we have a relatively small number (`r incomplete_percent*100`%) of missing 
+values, but enough that I would say it is necessary to fill in the gaps. Given 
+our previous work of finding the mean value for each individual 5-minute interval
+per day, we can easily extend this work to find the median value and assign all
+missing step counts per five-minute interval with that median. The reason I would
+not go with the mean is that it chases the tail of any skew - by picking the 
+median, we may be able to counteract any skew that may be present.
 
 ## Are there differences in activity patterns between weekdays and weekends?
