@@ -6,7 +6,7 @@ output:
     keep_md: true
 ---
 ```{r setup,message=FALSE,echo=FALSE}
-knitr::opts_chunk$set(fig.path = "figures/")
+knitr::opts_chunk$set(fig.path = "figure/")
 ```
 ## Loading and preprocessing the data
 ### 1. Loading in the data

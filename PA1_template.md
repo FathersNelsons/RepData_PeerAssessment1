@@ -69,7 +69,7 @@ activity_daily_total <- aggregate(steps ~ date, activity, sum)
 hist(activity_daily_total$steps)
 ```
 
-![](figures/unnamed-chunk-4-1.png)<!-- -->
+![](figure/unnamed-chunk-4-1.png)<!-- -->
 
 ### 2. Calculate the mean and median total number of steps per day
 
@@ -109,7 +109,7 @@ with(interval_mean,
           main = "Mean Steps by Interval Across All Days"))
 ```
 
-![](figures/unnamed-chunk-6-1.png)<!-- -->
+![](figure/unnamed-chunk-6-1.png)<!-- -->
 
 ### 2. Which 5-minute interval on average contains the maximum number of steps?
 
@@ -170,7 +170,7 @@ hist(activity_daily_total$steps, main = "Before Impute")
 hist(new_activity_daily_total$steps, main = "After Impute")
 ```
 
-![](figures/unnamed-chunk-10-1.png)<!-- -->
+![](figure/unnamed-chunk-10-1.png)<!-- -->
 
 #### New mean and median comparison
 
@@ -245,4 +245,4 @@ p <- p + geom_line()
 p + facet_wrap(~date_category, ncol = 1)
 ```
 
-![](figures/unnamed-chunk-13-1.png)<!-- -->
+![](figure/unnamed-chunk-13-1.png)<!-- -->
