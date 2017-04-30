@@ -130,6 +130,9 @@ interval_mean[which.max(interval_mean$steps),]
 incomplete_sum          <- sum(!complete.cases(activity))
 incomplete_percent      <- mean(!complete.cases(activity))
 ```
+Total Rows with NA | Percent of Total 
+-------------------|-----------------
+2304 | 13.1147541%
 
 ### 2. A strategy for filling in missing values
 It seems we have a relatively small number (13.1147541%) of missing 
@@ -140,4 +143,113 @@ missing step counts per five-minute interval with that median. The reason I woul
 not go with the mean is that it chases the tail of any skew - by picking the 
 median, we may be able to counteract any skew that may be present.
 
+### 3. Impute missing values with median
+
+```r
+interval_median <- aggregate(steps ~ interval, activity, median)
+activity$steps <- ifelse(is.na(activity$steps),
+                         interval_median$steps[match(activity$interval, interval_median$interval)],
+                         activity$steps)
+summary(activity$steps)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##       0       0       0      33       8     806
+```
+As we can see from the output of the summary, there are no longer any missing
+values in the steps column, which was the only column with NA values. 
+
+### 4. Gauge impact
+#### Histogram of Daily Total
+
+```r
+par(mfrow = c(1,2))
+new_activity_daily_total <- aggregate(steps ~ date, activity, sum)
+hist(activity_daily_total$steps, main = "Before Impute")
+hist(new_activity_daily_total$steps, main = "After Impute")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+
+#### New mean and median comparison
+
+```r
+summary(activity_daily_total$steps)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    8841   10760   10770   13290   21190
+```
+
+```r
+summary(new_activity_daily_total$steps)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    6778   10400    9504   12810   21190
+```
+
+#### Analysis
+We can see from the above figures that the impute strategy has had an effect on
+the mean and median values of the steps column. It would appear that those values
+have been reduced, and in doing leveraging the strategy we chose, we have
+actually done the opposite of what we intended to do and we introduced a stronger
+left-skew into the data. 
+
 ## Are there differences in activity patterns between weekdays and weekends?
+### Add a factor for weekdays and weekends to imputed dataset
+
+```r
+library(dplyr)
+weekend <- c("Saturday", "Sunday")
+activity <- mutate(activity, 
+                   date_category = ifelse(weekdays(date) %in% weekend,
+                                          "weekend",
+                                          "weekday"))
+activity <- mutate(activity, date_category = as.factor(date_category))
+str(activity)
+```
+
+```
+## 'data.frame':	17568 obs. of  4 variables:
+##  $ steps        : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ date         : Date, format: "2012-10-01" "2012-10-01" ...
+##  $ interval     : Factor w/ 288 levels "0","5","10","15",..: 1 2 3 4 5 6 7 8 9 10 ...
+##  $ date_category: Factor w/ 2 levels "weekday","weekend": 1 1 1 1 1 1 1 1 1 1 ...
+```
+
+```r
+summary(activity$date_category)
+```
+
+```
+## weekday weekend 
+##   12960    4608
+```
+### 2. Make a panel plot to compare the mean steps across all days on interval ID
+
+```r
+library(ggplot2)
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 3.3.3
+```
+
+```r
+interval_weekday_mean <- aggregate(steps~interval + date_category, activity, mean)
+p <- ggplot(interval_weekday_mean, 
+       aes(x=interval,
+           y=steps,
+           color=date_category,
+           group=date_category)) 
+p <- p + scale_x_discrete(name = "Interval ID", breaks = seq(0,2355,200))
+p <- p + scale_y_continuous(name = "Mean steps taken across all days", breaks = seq(0, 200, 25))
+p <- p + geom_line()
+p + facet_wrap(~date_category, ncol = 1)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
